@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CAT Assignment 2 P01 Group 1</title>
+    <link
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        background-color: #121212;
+        color: #e0e0e0;
+      }
+      .container {
+        background-color: #1f1f1f;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+      }
+      h1,
+      h2 {
+        color: #ffffff;
+      }
+      table {
+        background-color: #2b2b2b;
+      }
+      th,
+      td {
+        color: #e0e0e0;
+      }
+      th {
+        background-color: #3c3c3c;
+      }
+      .form-control {
+        background-color: #2b2b2b;
+        color: #e0e0e0;
+        border: 1px solid #444444;
+      }
+      .form-control::placeholder {
+        color: #bbbbbb;
+      }
+      .form-control:focus {
+        background-color: #333333;
+        border-color: #555555;
+        color: #e0e0e0;
+      }
+      .btn-primary {
+        background-color: #4a4a4a;
+        border: none;
+      }
+      .btn-primary:hover {
+        background-color: #616161;
+      }
+      .modal-content {
+        background-color: #1f1f1f;
+        color: #e0e0e0;
+      }
+      .modal-header {
+        border-bottom: 1px solid #444444;
+      }
+      .modal-footer {
+        border-top: 1px solid #444444;
+      }
+      .close {
+        color: #ffffff;
+        opacity: 1;
+      }
+      .close:hover,
+      .close:focus {
+        color: #cccccc;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container mt-5">
+      <h1 class="text-center">CAT Assignment 2 P01 Group 1</h1>
+      <h3 class="text-center">Application 2: Serverless Architecture</h3>
+      <div class="text-center mb-4">
+        <ul class="list-unstyled">
+          <li><h5>Group Members:</h5></li>
+          <li>Lee Guang Le, Jeffrey (S10258143A)</li>
+          <li>Jovan Ong (S10258143A)</li>
+          <li>Kelvin (S10258143A)</li>
+          <li>Daniel (S10258143A)</li>
+          <li>Vishwa (S10258143A)</li>
+        </ul>
+      </div>
+      <table class="table table-bordered" id="customerTable">
+        <thead>
+          <tr>
+            <th class="col-3">First Name</th>
+            <th class="col-3">Last Name</th>
+            <th class="col-6">Email</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Customer data will be appended here -->
+        </tbody>
+      </table>
+      <button
+        class="btn btn-primary"
+        data-toggle="modal"
+        data-target="#addCustomerModal"
+      >
+        Add New Customer
+      </button>
+    </div>
+
+    <!-- Add Customer Modal -->
+    <div
+      class="modal fade"
+      id="addCustomerModal"
+      tabindex="-1"
+      role="dialog"
+      aria-labelledby="addCustomerModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="addCustomerModalLabel">
+              Add New Customer
+            </h5>
+            <button
+              type="button"
+              class="close"
+              data-dismiss="modal"
+              aria-label="Close"
+            >
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <form id="addCustomerForm">
+              <div class="form-group">
+                <label for="firstName">First Name</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="firstName"
+                  required
+                />
+              </div>
+              <div class="form-group">
+                <label for="lastName">Last Name</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="lastName"
+                  required
+                />
+              </div>
+              <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" class="form-control" id="email" required />
+              </div>
+              <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        // Function to get and display customer data
+        function getCustomers() {
+          fetch(
+            `https://axdas1pdtc.execute-api.us-east-1.amazonaws.com/production/getAccount`,
+            {
+              method: "GET",
+              headers: {
+                "Content-Type": "application/json",
+              },
+            }
+          )
+            .then((response) => {
+              if (!response.ok) {
+                throw new Error("Network response was not ok");
+              }
+              return response.json();
+            })
+            .then((data) => {
+              console.log("Response data:", data); // Log the response data to inspect its structure
+              const customers = Array.isArray(data) ? data : [];
+              let customerRows = "";
+              customers.forEach((customer) => {
+                customerRows += `
+                  <tr>
+                    <td>${customer.firstName}</td>
+                    <td>${customer.lastName}</td>
+                    <td>${customer.email}</td>
+                  </tr>
+                `;
+              });
+              document.querySelector("#customerTable tbody").innerHTML =
+                customerRows;
+            })
+            .catch((error) => {
+              console.error("Error fetching customer data:", error);
+            });
+        }
+
+        // Fetch customer data on page load
+        getCustomers();
+
+        // Function to add a new customer
+        document
+          .querySelector("#addCustomerForm")
+          .addEventListener("submit", function (event) {
+            event.preventDefault();
+            const newCustomer = {
+              firstName: document.querySelector("#firstName").value,
+              lastName: document.querySelector("#lastName").value,
+              email: document.querySelector("#email").value,
+            };
+
+            fetch(
+              `https://axdas1pdtc.execute-api.us-east-1.amazonaws.com/production/addAcount`,
+              {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify(newCustomer),
+              }
+            )
+              .then((response) => {
+                if (!response.ok) {
+                  throw new Error("Network response was not ok");
+                }
+                return response.json();
+              })
+              .then((data) => {
+                console.log("Add customer response:", data); // Log the response data to inspect its structure
+                $("#addCustomerModal").modal("hide");
+                getCustomers(); // Refresh the customer list
+                location.reload(); // Refresh the page
+              })
+              .catch((error) => {
+                console.error("Error adding new customer:", error);
+              });
+          });
+      });
+    </script>
+  </body>
+</html>
