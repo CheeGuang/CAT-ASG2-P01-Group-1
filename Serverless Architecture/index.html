@@ -81,10 +81,10 @@
         <ul class="list-unstyled">
           <li><h5>Group Members:</h5></li>
           <li>Lee Guang Le, Jeffrey (S10258143A)</li>
-          <li>Jovan Ong (S10258143A)</li>
-          <li>Kelvin (S10258143A)</li>
-          <li>Daniel (S10258143A)</li>
-          <li>Vishwa (S10258143A)</li>
+          <li>Jovan Ong Yi Jie (S10258240E)</li>
+          <li>Tan Guo Zhi Kelvin (S10262567K)</li>
+          <li>Putera Daniel Baker (S10257120J)</li>
+          <li>Bharathkumar Vishwanath (S10240086K)</li>
         </ul>
       </div>
       <table class="table table-bordered" id="customerTable">
@@ -191,12 +191,12 @@
               let customerRows = "";
               customers.forEach((customer) => {
                 customerRows += `
-                  <tr>
-                    <td>${customer.firstName}</td>
-                    <td>${customer.lastName}</td>
-                    <td>${customer.email}</td>
-                  </tr>
-                `;
+            <tr>
+              <td>${customer.firstName}</td>
+              <td>${customer.lastName}</td>
+              <td>${customer.email}</td>
+            </tr>
+          `;
               });
               document.querySelector("#customerTable tbody").innerHTML =
                 customerRows;
@@ -240,7 +240,6 @@
                 console.log("Add customer response:", data); // Log the response data to inspect its structure
                 $("#addCustomerModal").modal("hide");
                 getCustomers(); // Refresh the customer list
-                location.reload(); // Refresh the page
               })
               .catch((error) => {
                 console.error("Error adding new customer:", error);
